@@ -5,3 +5,15 @@ body {
 h1 {
   font-size: 28px;
 }
+
+.row {
+  display: flex;
+  gap: 0.25rem;
+  flex-direction: row;
+}
+
+.col {
+  display: flex;
+  gap: 0.25rem;
+  flex-direction: column;
+}
