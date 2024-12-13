@@ -2,10 +2,10 @@
 
 /**
  * @typedef {Object} FieldProps
- * @property {string} name
+ * @property {string} [name]
  * @property {string} [type]
  * @property {string} [value]
- * @property {string} label
+ * @property {string} [label]
  * @property {string} [placeholder]
  * @property {string} [testId]
  * @property {boolean} [required]
@@ -13,37 +13,78 @@
  * @property {boolean} [multiline]
  */
 
-/**
- * 
- * @param {FieldProps} props
- */
-export default function createField(props) {
-  const field = document.createElement("div");
-  field.className = "col";
+export default class Field {
+  /**
+   * @param {FieldProps} props
+   */
+  constructor(props) {
+    this.options = props;
 
-  const label = document.createElement("label");
-  label.setAttribute("for", props.name);
-  label.textContent = props.label;
+    this.element = document.createElement("div");
 
-  const input = document.createElement(props.multiline ? "textarea" : "input");
+    if (this.options.label) {
+      this.label = document.createElement("label");
+    }
 
-  if (input instanceof HTMLInputElement) {
-    input.type = props.type ?? "text";
+    this.input = document.createElement(this.options.multiline ? "textarea" : "input");
+
+    this.setup();
   }
 
-  input.id = props.name;
-  input.name = props.name;
-  input.value = props.value ?? "";
-  input.placeholder = props.placeholder ?? "";
-  input.required = props.required ?? false;
-  input.autofocus = props.autofocus ?? false;
-  input.setAttribute("test-id", props.testId ?? "");
+  setup() {
+    this.setupElements();
+    this.setupLayout();
+    this.setupEventListeners();
+  }
 
-  field.appendChild(label);
-  field.appendChild(input);
+  setupElements() {
+    this.setupElement();
+    this.setupLabel();
+    this.setupInput();
+  }
 
-  return Object.assign(field, {
-    label,
-    input,
-  });
+  setupElement() {
+    this.element.className = "col";
+  }
+
+  setupLabel() {
+    if (this.label && this.options.label) {
+      this.label.setAttribute("for", this.options.name ?? "");
+      this.label.textContent = this.options.label;
+    }
+  }
+
+  setupInput() {
+    if (this.input instanceof HTMLInputElement) {
+      this.input.type = this.options.type ?? "text";
+    }
+
+    this.input.id = this.options.name ?? "";
+    this.input.name = this.options.name ?? "";
+    this.input.value = this.options.value ?? "";
+    this.input.placeholder = this.options.placeholder ?? "";
+    this.input.required = this.options.required ?? false;
+    this.input.autofocus = this.options.autofocus ?? false;
+    this.input.setAttribute("test-id", this.options.testId ?? "");
+  }
+
+  setupLayout() {
+    if (this.label) {
+      this.element.appendChild(this.label);
+    }
+
+    this.element.appendChild(this.input);
+  }
+
+  setupEventListeners() {
+    this.input.form?.addEventListener("reset", this.reset.bind(this));
+  }
+
+  reset() {
+    const value = this.options.value;
+
+    if (value) {
+      this.input.value = value;
+    }
+  }
 }

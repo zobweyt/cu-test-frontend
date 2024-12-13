@@ -9,18 +9,17 @@
  * @property {string} [testId]
  */
 
-/**
- * 
- * @param {ButtonProps} props
- */
-export default function createButton(props) {
-  const button = document.createElement("button");
+export default class Button {
+  /**
+   * @param {ButtonProps} props
+   */
+  constructor(props) {
+    this.element = document.createElement("button");
 
-  button.textContent = props.label;
-  button.type = props.type || "button";
-  button.disabled = props.disabled || false;
-  button.autofocus = props.autofocus || false;
-  button.setAttribute("test-id", props.testId ?? "");
-
-  return button;
+    this.element.textContent = props.label;
+    this.element.type = props.type || "button";
+    this.element.disabled = props.disabled || false;
+    this.element.autofocus = props.autofocus || false;
+    this.element.setAttribute("test-id", props.testId ?? "");
+  }
 }

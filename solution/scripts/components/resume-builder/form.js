@@ -2,185 +2,126 @@
 
 /// <reference path="./types.js" />
 
-import { dump, serialize } from "../../utils/form.js";
-import createButton from "../button.js";
-import createField from "../field.js";
-import createCoursesFieldSet from "./courses.js";
-import createEducationFieldSet from "./education.js";
-import createExperienceFieldSet from "./experience.js";
-import createInterestsFieldSet from "./interests.js";
-import createLanguagesFieldSet from "./languages.js";
+import { dump } from "../../utils/form.js";
+import Button from "../button.js";
+import Field from "../field.js";
+import CoursesFieldset from "./fields/courses.js";
+import EducationFieldset from "./fields/education.js";
+import InterestsFieldset from "./fields/interests.js";
+import JobsFieldset from "./fields/jobs.js";
+import LanguagesFieldset from "./fields/languages.js";
+import PersonalFieldset from "./fields/personal.js";
 
-/**
- * @param {string} [value] 
- */
-export function createResumeNameField(value = "Новое резюме") {
-  return createField({
-    name: "name",
-    value: value,
-    label: "Название формы:",
-    placeholder: "Введите название формы…",
-    autofocus: true,
-  });
-}
+export default class ResumeBuilderForm {
+  /**
+   * @param {Resume} [resume] 
+   */
+  constructor(resume) {
+    this.element = document.createElement("form");
 
-/**
- * @param {string} [value] 
- */
-export function createDescriptionField(value = undefined) {
-  return createField({
-    name: "description",
-    value: value,
-    label: "Описание:",
-    placeholder: "Введите описание о себе…",
-    testId: "personal-description",
-    multiline: true,
-  })
-}
+    this.name = new Field({
+      name: "name",
+      value: resume?.name ?? "Новое резюме",
+      label: "Название формы:",
+      placeholder: "Введите название формы…",
+      autofocus: true,
+    });
 
-/**
- * @param {string} [value] 
- */
-export function createUsernameField(value = undefined) {
-  return createField({
-    name: "username",
-    value: value,
-    label: "ФИО:",
-    placeholder: "Введите своё ФИО…",
-    testId: "personal-info",
-    required: true,
-  });
-}
+    this.personal = new PersonalFieldset(resume);
 
-/**
- * @param {string} [value] 
- */
-export function createBirthdayField(value = undefined) {
-  return createField({
-    name: "birthday",
-    type: "date",
-    value: value,
-    label: "Дата рождения:",
-    placeholder: "Введите свою дату рождения…",
-    testId: "personal-info",
-  });
-}
+    this.description = new Field({
+      name: "description",
+      value: resume?.description,
+      label: "Описание:",
+      placeholder: "Введите описание о себе…",
+      testId: "personal-description",
+      multiline: true,
+    });
 
-/**
- * @param {string} [value] 
- */
-export function createCityField(value = undefined) {
-  return createField({
-    name: "city",
-    value: value,
-    label: "Город:",
-    placeholder: "Введите свой город проживания…",
-    testId: "personal-info",
-  });
-}
+    this.interests = new InterestsFieldset(resume?.interests);
+    this.languages = new LanguagesFieldset(resume?.languages);
+    this.jobs = new JobsFieldset(resume?.jobs);
+    this.education = new EducationFieldset(resume?.education);
+    this.courses = new CoursesFieldset(resume?.courses);
 
-/**
- * @param {string} [value] 
- */
-export function createPhoneField(value = undefined) {
-  return createField({
-    name: "tel",
-    type: "tel",
-    value: value,
-    label: "Номер телефона:",
-    placeholder: "Введите свой номер телефона…",
-    testId: "personal-info",
-  });
-}
+    this.footer = document.createElement("div");
 
-/**
- * @param {string} [value] 
- */
-export function createEmailField(value = undefined) {
-  return createField({
-    name: "email",
-    type: "email",
-    value: value,
-    label: "Email:",
-    placeholder: "Введите свой email…",
-    testId: "personal-info",
-  });
-}
+    this.submit = new Button({
+      type: "submit",
+      label: "Сгенерировать резюме",
+      testId: "generate-resume",
+      disabled: !this.element.checkValidity(),
+    });
 
-/**
- * @param {HTMLFormElement} form
- */
-export function createResumeBuilderFormFooter(form) {
-  const footer = document.createElement("div");
-  footer.classList.add("row");
+    this.setup();
+  }
 
-  const submit = createButton({
-    type: "submit",
-    label: "Сгенерировать резюме",
-    testId: "generate-resume",
-    disabled: !form.checkValidity(),
-  });
+  setup() {
+    this.setupElements();
+    this.setupLayout();
+    this.setupEventListeners();
 
-  const reset = createButton({
-    type: "reset",
-    label: "Сбросить",
-  });
+    this.name.input.focus();
+    this.name.input.select();
+  }
 
-  footer.appendChild(submit);
-  footer.appendChild(reset);
+  setupElements() {
+    this.setupFooter();
+    this.setupElement();
+  }
 
-  form.addEventListener("reset", updateSubmitState);
-  form.addEventListener("input", updateSubmitState);
-  form.addEventListener("change", updateSubmitState);
+  setupFooter() {
+    this.footer.classList.add("row");
+  }
 
-  function updateSubmitState() {
+  setupElement() {
+    this.element.classList.add("col");
+    this.element.setAttribute("test-id", "resume-builder");
+  }
+
+  setupLayout() {
+    this.setupFooterLayout();
+    this.setupElementLayout();
+  }
+  setupFooterLayout() {
+    this.footer.appendChild(this.submit.element);
+  }
+
+  setupElementLayout() {
+    this.element.appendChild(this.name.element);
+    this.element.appendChild(this.personal.element);
+    this.element.appendChild(this.description.element);
+    this.element.appendChild(this.interests.element);
+    this.element.appendChild(this.languages.element);
+    this.element.appendChild(this.jobs.element);
+    this.element.appendChild(this.education.element);
+    this.element.appendChild(this.courses.element);
+    this.element.appendChild(this.footer);
+  }
+
+  setupEventListeners() {
+    this.element.addEventListener("reset", this.updateSubmitButtonState.bind(this));
+    this.element.addEventListener("input", this.updateSubmitButtonState.bind(this));
+    this.element.addEventListener("change", this.updateSubmitButtonState.bind(this));
+    this.element.addEventListener("submit", this.generateResume.bind(this));
+  }
+
+  updateSubmitButtonState() {
     requestAnimationFrame(() => {
-      submit.disabled = !form.checkValidity();
+      this.submit.element.disabled = !this.element.checkValidity();
     });
   }
 
-  return Object.assign(footer, {
-    submit,
-    reset,
-  })
-}
-
-/**
- * @param {Resume} [resume]
- */
-export default function createResumeBuilderForm(resume = undefined) {
   /**
-   * @param {SubmitEvent} event
-   */
-  function generateResume(event) {
+  * @param {SubmitEvent} event
+  */
+  generateResume(event) {
     event.preventDefault();
 
-    const data = /** @type {Resume} */ (dump(form));
+    const data = /** @type {Resume} */ (dump(this.element));
 
     alert(JSON.stringify(data, null, 2));
     // console.debug(JSON.stringify(data, null, 2));
     // console.debug(JSON.stringify(JSON.stringify(Object.fromEntries(serialize(data).entries())), null, 2));
   }
-
-  const form = document.createElement("form");
-  form.classList.add("col");
-  form.setAttribute("test-id", "resume-builder");
-
-  form.appendChild(createResumeNameField(resume?.name));
-  form.appendChild(createUsernameField(resume?.username));
-  form.appendChild(createBirthdayField(resume?.birthday));
-  form.appendChild(createCityField(resume?.city));
-  form.appendChild(createPhoneField(resume?.tel));
-  form.appendChild(createEmailField(resume?.email));
-  form.appendChild(createDescriptionField(resume?.description));
-  form.appendChild(createInterestsFieldSet(resume?.interests));
-  form.appendChild(createLanguagesFieldSet(resume?.languages));
-  form.appendChild(createExperienceFieldSet(resume?.jobs));
-  form.appendChild(createEducationFieldSet(resume?.education));
-  form.appendChild(createCoursesFieldSet(resume?.courses));
-  form.appendChild(createResumeBuilderFormFooter(form));
-
-  form.addEventListener("submit", generateResume);
-
-  return form;
 }
