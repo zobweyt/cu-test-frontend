@@ -82,4 +82,4 @@ const EXAMPLE_RESUME = {
 };
 
 // @ts-ignore
-render(() => new ResumeBuilderPage(EXAMPLE_RESUME).element, document.getElementById("app"));
+render(() => new ResumeBuilderPage().element, document.getElementById("app"));

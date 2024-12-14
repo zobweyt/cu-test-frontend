@@ -50,7 +50,7 @@ export default class ResumeBuilderForm {
       type: "submit",
       label: "Сгенерировать резюме",
       testId: "generate-resume",
-      disabled: !this.element.checkValidity(),
+      disabled: true,
     });
 
     this.setup();
