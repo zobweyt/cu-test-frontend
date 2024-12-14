@@ -50,7 +50,6 @@ export default class ResumeBuilderForm {
       type: "submit",
       label: "Сгенерировать резюме",
       testId: "generate-resume",
-      disabled: true,
     });
 
     this.setup();
@@ -63,6 +62,10 @@ export default class ResumeBuilderForm {
 
     this.name.input.focus();
     this.name.input.select();
+
+    requestAnimationFrame(() => {
+      this.updateSubmitButtonState();
+    });
   }
 
   setupElements() {
@@ -112,25 +115,11 @@ export default class ResumeBuilderForm {
       "change",
       this.updateSubmitButtonState.bind(this),
     );
-    this.element.addEventListener("submit", this.generateResume.bind(this));
   }
 
   updateSubmitButtonState() {
     requestAnimationFrame(() => {
       this.submit.element.disabled = !this.element.checkValidity();
     });
-  }
-
-  /**
-   * @param {SubmitEvent} event
-   */
-  generateResume(event) {
-    event.preventDefault();
-
-    const data = /** @type {Resume} */ (dump(this.element));
-
-    alert(JSON.stringify(data, null, 2));
-    // console.debug(JSON.stringify(data, null, 2));
-    // console.debug(JSON.stringify(JSON.stringify(Object.fromEntries(serialize(data).entries())), null, 2));
   }
 }
