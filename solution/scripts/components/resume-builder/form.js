@@ -14,7 +14,7 @@ import PersonalFieldset from "./fields/personal.js";
 
 export default class ResumeBuilderForm {
   /**
-   * @param {Resume} [resume] 
+   * @param {Resume} [resume]
    */
   constructor(resume) {
     this.element = document.createElement("form");
@@ -100,9 +100,18 @@ export default class ResumeBuilderForm {
   }
 
   setupEventListeners() {
-    this.element.addEventListener("reset", this.updateSubmitButtonState.bind(this));
-    this.element.addEventListener("input", this.updateSubmitButtonState.bind(this));
-    this.element.addEventListener("change", this.updateSubmitButtonState.bind(this));
+    this.element.addEventListener(
+      "reset",
+      this.updateSubmitButtonState.bind(this),
+    );
+    this.element.addEventListener(
+      "input",
+      this.updateSubmitButtonState.bind(this),
+    );
+    this.element.addEventListener(
+      "change",
+      this.updateSubmitButtonState.bind(this),
+    );
     this.element.addEventListener("submit", this.generateResume.bind(this));
   }
 
@@ -113,8 +122,8 @@ export default class ResumeBuilderForm {
   }
 
   /**
-  * @param {SubmitEvent} event
-  */
+   * @param {SubmitEvent} event
+   */
   generateResume(event) {
     event.preventDefault();
 
