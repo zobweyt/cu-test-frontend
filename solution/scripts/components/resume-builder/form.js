@@ -74,7 +74,6 @@ export default class ResumeBuilderForm {
   }
 
   setupFooter() {
-    // this.footer.classList.add("full-width");
     this.footer.classList.add("flex-group");
     this.footer.classList.add("justify-end");
   }
