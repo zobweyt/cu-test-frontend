@@ -33,10 +33,12 @@ export default class CoursesFieldset extends Fieldset {
   createElement(value) {
     const element = document.createElement("div");
 
+    const upper = document.createElement("div");
+    const lower = document.createElement("div");
+
     const title = new Field({
       name: this.generateUniqueId("title"),
       value: value?.title,
-      label: "Название",
       placeholder: "Введите название курса…",
       testId: "course-title",
     });
@@ -45,7 +47,6 @@ export default class CoursesFieldset extends Fieldset {
       name: this.generateUniqueId("date-start"),
       type: "date",
       value: value?.date_start,
-      label: "Дата начала",
       placeholder: "Введите дату начала обучения…",
       testId: "course-date-start",
     });
@@ -54,7 +55,6 @@ export default class CoursesFieldset extends Fieldset {
       name: this.generateUniqueId("date-end"),
       type: "date",
       value: value?.date_end,
-      label: "Дата окончания",
       placeholder: "Введите дату окончания обучения…",
       testId: "course-date-end",
     });
@@ -62,23 +62,29 @@ export default class CoursesFieldset extends Fieldset {
     const place = new Field({
       name: this.generateUniqueId("place"),
       value: value?.place,
-      label: "Место работы",
       placeholder: "Введите место обучения…",
       testId: "course-place",
     });
 
-    element.appendChild(title.element);
-    element.appendChild(start.element);
-    element.appendChild(end.element);
-    element.appendChild(place.element);
 
-    element.classList.add("col");
+    upper.classList.add("grid-auto-fit");
+    lower.classList.add("grid-auto-fit");
+    element.classList.add("flow");
+
+    upper.appendChild(title.element);
+    upper.appendChild(place.element);
+
+    lower.appendChild(start.element);
+    lower.appendChild(end.element);
+
+    element.appendChild(upper);
+    element.appendChild(lower);
 
     if (this.initialized) {
       requestAnimationFrame(() => {
         title.input.focus();
         title.input.select();
-      });      
+      });
     }
 
     return element;

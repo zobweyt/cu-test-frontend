@@ -23,8 +23,17 @@ export default class Fieldset {
     this.element = document.createElement("fieldset");
     this.legend = document.createElement("legend");
     this.controls = document.createElement("div");
-    this.addButton = new Button({ label: "Добавить" });
-    this.removeButton = new Button({ label: "Удалить" });
+
+    this.addButton = new Button({
+      label: "Добавить",
+      variant: "secondary",
+    });
+
+    this.removeButton = new Button({
+      label: "Удалить",
+      variant: "bezelled-destructive",
+    });
+
     this.ul = document.createElement("ul");
 
     this.setup();
@@ -37,11 +46,11 @@ export default class Fieldset {
 
     requestAnimationFrame(() => {
       this.reset();
-    })
+    });
 
     requestAnimationFrame(() => {
       this.initialized = true;
-    })
+    });
   }
 
   setupElements() {
@@ -52,21 +61,23 @@ export default class Fieldset {
   }
 
   setupElement() {
-    this.element.className = "col";
+    this.element.classList.add("fieldset");
+    this.element.classList.add("flow");
   }
 
   setupLegend() {
     if (this.props?.label) {
+      this.legend.classList.add("fieldset__legend");
       this.legend.textContent = this.props?.label;
     }
   }
 
   setupUList() {
-    this.ul.className = "col";
+    this.ul.classList.add("flow");
   }
 
   setupControls() {
-    this.controls.className = "row";
+    this.controls.classList.add("flex-group");
   }
 
   setupLayout() {
@@ -81,8 +92,8 @@ export default class Fieldset {
 
   setupFieldsetLayout() {
     this.element.appendChild(this.legend);
-    this.element.appendChild(this.controls);
     this.element.appendChild(this.ul);
+    this.element.appendChild(this.controls);
   }
 
   setupEventListeners() {
@@ -98,7 +109,7 @@ export default class Fieldset {
   }
 
   /**
-   * @param {HTMLElement} child 
+   * @param {HTMLElement} child
    */
   appendLIElement(child) {
     const li = this.createLIElement(child);
@@ -108,7 +119,7 @@ export default class Fieldset {
   }
 
   /**
-   * @param {HTMLElement} child 
+   * @param {HTMLElement} child
    */
   createLIElement(child) {
     const li = document.createElement("li");

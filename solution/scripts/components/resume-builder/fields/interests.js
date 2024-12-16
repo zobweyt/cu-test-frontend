@@ -10,7 +10,7 @@ import Fieldset from "../../fieldset.js";
  */
 export default class InterestsFieldset extends Fieldset {
   /**
-   * @param {string[]} [interests] 
+   * @param {string[]} [interests]
    */
   constructor(interests) {
     super({
@@ -34,7 +34,6 @@ export default class InterestsFieldset extends Fieldset {
     const field = new Field({
       name: this.generateUniqueId(),
       value: value,
-      label: "Название",
       placeholder: "Введите свой интерес…",
       testId: "interest",
     });

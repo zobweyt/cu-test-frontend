@@ -6,15 +6,15 @@ import Field from "../../field.js";
 
 export default class PersonalFieldset {
   /**
-   * @param {Resume} [resume] 
+   * @param {Resume} [resume]
    */
   constructor(resume) {
     this.element = document.createElement("div");
+    this.element.classList.add("flow");
 
     this.username = new Field({
       name: "username",
       value: resume?.username,
-      label: "ФИО:",
       placeholder: "Введите своё ФИО…",
       testId: "personal-info",
       required: true,
@@ -24,7 +24,6 @@ export default class PersonalFieldset {
       name: "birthday",
       type: "date",
       value: resume?.birthday,
-      label: "Дата рождения:",
       placeholder: "Введите свою дату рождения…",
       testId: "personal-info",
     });
@@ -32,7 +31,6 @@ export default class PersonalFieldset {
     this.city = new Field({
       name: "city",
       value: resume?.city,
-      label: "Город:",
       placeholder: "Введите свой город проживания…",
       testId: "personal-info",
     });
@@ -41,7 +39,6 @@ export default class PersonalFieldset {
       name: "tel",
       type: "tel",
       value: resume?.tel,
-      label: "Номер телефона:",
       placeholder: "Введите свой номер телефона…",
       testId: "personal-info",
     });
@@ -50,7 +47,6 @@ export default class PersonalFieldset {
       name: "email",
       type: "email",
       value: resume?.email,
-      label: "Email:",
       placeholder: "Введите свой email…",
       testId: "personal-info",
     });

@@ -17,7 +17,7 @@ export default class EducationFieldset extends Fieldset {
       id: "education",
       label: "Образование и квалификация",
       options: education,
-    })
+    });
   }
 
   setup() {
@@ -33,10 +33,12 @@ export default class EducationFieldset extends Fieldset {
   createElement(value) {
     const element = document.createElement("div");
 
+    const upper = document.createElement("div");
+    const lower = document.createElement("div");
+
     const title = new Field({
       name: this.generateUniqueId("title"),
       value: value?.title,
-      label: "Название",
       placeholder: "Введите высшее образование…",
       testId: "education-title",
     });
@@ -45,7 +47,6 @@ export default class EducationFieldset extends Fieldset {
       name: this.generateUniqueId("date-start"),
       type: "date",
       value: value?.date_start,
-      label: "Дата начала",
       placeholder: "Введите дату начала обучения…",
       testId: "education-date-start",
     });
@@ -54,7 +55,6 @@ export default class EducationFieldset extends Fieldset {
       name: this.generateUniqueId("date-end"),
       type: "date",
       value: value?.date_end,
-      label: "Дата окончания",
       placeholder: "Введите дату окончания обучения…",
       testId: "education-date-end",
     });
@@ -62,7 +62,6 @@ export default class EducationFieldset extends Fieldset {
     const place = new Field({
       name: this.generateUniqueId("place"),
       value: value?.place,
-      label: "Место работы",
       placeholder: "Введите место обучения…",
       testId: "education-place",
     });
@@ -70,19 +69,24 @@ export default class EducationFieldset extends Fieldset {
     const description = new Field({
       name: this.generateUniqueId("description"),
       value: value?.description,
-      label: "Описание работы",
-      placeholder: "Введите произвольные описание места обучения…",
+      placeholder: "Введите описание обучения…",
       testId: "education-description",
       multiline: true,
     });
 
-    element.appendChild(title.element);
-    element.appendChild(start.element);
-    element.appendChild(end.element);
-    element.appendChild(place.element);
-    element.appendChild(description.element);
+    upper.classList.add("grid-auto-fit");
+    lower.classList.add("grid-auto-fit");
+    element.classList.add("flow");
 
-    element.classList.add("col");
+    upper.appendChild(title.element);
+    upper.appendChild(place.element);
+
+    lower.appendChild(start.element);
+    lower.appendChild(end.element);
+
+    element.appendChild(upper);
+    element.appendChild(lower);
+    element.appendChild(description.element);
 
     if (this.initialized) {
       requestAnimationFrame(() => {

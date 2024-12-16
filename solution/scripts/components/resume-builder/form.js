@@ -17,13 +17,14 @@ export default class ResumeBuilderForm {
    * @param {Resume} [resume]
    */
   constructor(resume) {
+    this.resume = resume;
+
     this.element = document.createElement("form");
 
     this.name = new Field({
       name: "name",
-      value: resume?.name ?? "Новое резюме",
-      label: "Название формы:",
-      placeholder: "Введите название формы…",
+      value: resume?.name,
+      placeholder: "Введите название резюме…",
       autofocus: true,
     });
 
@@ -32,7 +33,6 @@ export default class ResumeBuilderForm {
     this.description = new Field({
       name: "description",
       value: resume?.description,
-      label: "Описание:",
       placeholder: "Введите описание о себе…",
       testId: "personal-description",
       multiline: true,
@@ -64,7 +64,7 @@ export default class ResumeBuilderForm {
     this.name.input.select();
 
     requestAnimationFrame(() => {
-      this.updateSubmitButtonState();
+      this.updateSubmitButtonDisabled();
     });
   }
 
@@ -74,11 +74,13 @@ export default class ResumeBuilderForm {
   }
 
   setupFooter() {
-    this.footer.classList.add("row");
+    // this.footer.classList.add("full-width");
+    this.footer.classList.add("flex-group");
+    this.footer.classList.add("justify-end");
   }
 
   setupElement() {
-    this.element.classList.add("col");
+    this.element.classList.add("flow");
     this.element.setAttribute("test-id", "resume-builder");
   }
 
@@ -105,21 +107,34 @@ export default class ResumeBuilderForm {
   setupEventListeners() {
     this.element.addEventListener(
       "reset",
-      this.updateSubmitButtonState.bind(this),
+      this.updateSubmitButtonDisabled.bind(this),
     );
     this.element.addEventListener(
       "input",
-      this.updateSubmitButtonState.bind(this),
+      this.updateSubmitButtonDisabled.bind(this),
     );
     this.element.addEventListener(
       "change",
-      this.updateSubmitButtonState.bind(this),
+      this.updateSubmitButtonDisabled.bind(this),
+    );
+    this.element.addEventListener(
+      "submit",
+      this.handleResumeSubmitEvent.bind(this),
     );
   }
 
-  updateSubmitButtonState() {
+  updateSubmitButtonDisabled() {
     requestAnimationFrame(() => {
       this.submit.element.disabled = !this.element.checkValidity();
     });
+  }
+
+  /**
+   * @param {SubmitEvent} event
+   */
+  handleResumeSubmitEvent(event) {
+    event.preventDefault();
+
+    this.resume = /** @type {Resume} */ (dump(this.element));
   }
 }

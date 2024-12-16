@@ -17,7 +17,7 @@ export default class JobsFieldset extends Fieldset {
       id: "jobs",
       label: "Опыт работы",
       options: jobs,
-    })
+    });
   }
 
   setup() {
@@ -33,10 +33,12 @@ export default class JobsFieldset extends Fieldset {
   createElement(value) {
     const element = document.createElement("div");
 
+    const upper = document.createElement("div");
+    const lower = document.createElement("div");
+
     const title = new Field({
       name: this.generateUniqueId("title"),
       value: value?.title,
-      label: "Должность",
       placeholder: "Введите должность…",
       testId: "job-title",
     });
@@ -45,7 +47,6 @@ export default class JobsFieldset extends Fieldset {
       name: this.generateUniqueId("date-start"),
       type: "date",
       value: value?.date_start,
-      label: "Дата начала",
       placeholder: "Введите дату начала работы…",
       testId: "job-date-start",
     });
@@ -54,7 +55,6 @@ export default class JobsFieldset extends Fieldset {
       name: this.generateUniqueId("date-end"),
       type: "date",
       value: value?.date_end,
-      label: "Дата окончания",
       placeholder: "Введите дату окончания работы…",
       testId: "job-date-end",
     });
@@ -62,7 +62,6 @@ export default class JobsFieldset extends Fieldset {
     const place = new Field({
       name: this.generateUniqueId("place"),
       value: value?.place,
-      label: "Место работы",
       placeholder: "Введите место работы…",
       testId: "job-place",
     });
@@ -70,19 +69,24 @@ export default class JobsFieldset extends Fieldset {
     const description = new Field({
       name: this.generateUniqueId("description"),
       value: value?.description,
-      label: "Описание работы",
-      placeholder: "Введите произвольные описание работы…",
+      placeholder: "Введите описание работы…",
       testId: "jon-description",
       multiline: true,
     });
 
-    element.appendChild(title.element);
-    element.appendChild(start.element);
-    element.appendChild(end.element);
-    element.appendChild(place.element);
-    element.appendChild(description.element);
+    upper.classList.add("grid-auto-fit");
+    lower.classList.add("grid-auto-fit");
+    element.classList.add("flow");
 
-    element.classList.add("col");
+    upper.appendChild(title.element);
+    upper.appendChild(place.element);
+
+    lower.appendChild(start.element);
+    lower.appendChild(end.element);
+
+    element.appendChild(upper);
+    element.appendChild(lower);
+    element.appendChild(description.element);
 
     if (this.initialized) {
       requestAnimationFrame(() => {

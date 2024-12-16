@@ -28,7 +28,7 @@ export default class LanguagesFieldset extends Fieldset {
   }
 
   /**
-   * @param {Partial<Language>} [value] 
+   * @param {Partial<Language>} [value]
    */
   createElement(value) {
     const element = document.createElement("div");
@@ -36,7 +36,6 @@ export default class LanguagesFieldset extends Fieldset {
     const name = new Field({
       name: this.generateUniqueId("name"),
       value: value?.name,
-      label: "Название",
       placeholder: "Введите название языка…",
       testId: "language-name",
     });
@@ -44,7 +43,6 @@ export default class LanguagesFieldset extends Fieldset {
     const level = new Field({
       name: this.generateUniqueId("level"),
       value: value?.level,
-      label: "Уровень",
       placeholder: "Введите уровень владения языком…",
       testId: "language-level",
     });;
@@ -52,7 +50,7 @@ export default class LanguagesFieldset extends Fieldset {
     element.append(name.element);
     element.append(level.element);
 
-    element.classList.add("row");
+    element.classList.add("grid-auto-fit");
 
     if (this.initialized) {
       requestAnimationFrame(() => {

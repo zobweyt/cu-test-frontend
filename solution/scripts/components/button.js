@@ -3,6 +3,7 @@
 /**
  * @typedef {Object} ButtonProps
  * @property {string} label
+ * @property {"primary" | "secondary" | "bezelled-primary" | "bezelled-destructive"} [variant]
  * @property {"submit" | "reset" | "button"} [type]
  * @property {boolean} [disabled]
  * @property {boolean} [autofocus]
@@ -21,5 +22,10 @@ export default class Button {
     this.element.disabled = props.disabled || false;
     this.element.autofocus = props.autofocus || false;
     this.element.setAttribute("test-id", props.testId ?? "");
+    this.element.classList.add("button");
+
+    if (props.variant) {
+      this.element.classList.add(`button--${props.variant}`);
+    }
   }
 }

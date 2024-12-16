@@ -44,13 +44,15 @@ export default class Field {
   }
 
   setupElement() {
-    this.element.className = "col";
+    this.element.classList.add("field");
   }
 
   setupLabel() {
+
     if (this.label && this.options.label) {
-      this.label.setAttribute("for", this.options.name ?? "");
+      this.label.classList.add("field__label");
       this.label.textContent = this.options.label;
+      this.label.setAttribute("for", this.options.name ?? "");
     }
   }
 
@@ -59,6 +61,7 @@ export default class Field {
       this.input.type = this.options.type ?? "text";
     }
 
+    this.input.classList.add("field__input")
     this.input.id = this.options.name ?? "";
     this.input.name = this.options.name ?? "";
     this.input.value = this.options.value ?? "";

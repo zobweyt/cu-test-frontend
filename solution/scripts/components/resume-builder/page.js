@@ -2,7 +2,6 @@
 
 /// <reference path="./types.js" />
 
-import { dump } from "../../utils/form.js";
 import ResumeBuilderForm from "./form.js";
 
 export default class ResumeBuilderPage {
@@ -35,7 +34,7 @@ export default class ResumeBuilderPage {
   }
 
   setupElement() {
-    this.element.classList.add("col");
+    this.element.classList.add("primary-layout");
   }
 
   setupLayout() {
@@ -56,10 +55,8 @@ export default class ResumeBuilderPage {
   generateResume(event) {
     event.preventDefault();
 
-    const data = /** @type {Resume} */ (dump(this.form.element));
-
-    alert(JSON.stringify(data, null, 2));
-    // console.debug(JSON.stringify(data, null, 2));
-    // console.debug(JSON.stringify(JSON.stringify(Object.fromEntries(serialize(data).entries())), null, 2));
+    alert(JSON.stringify(this.form.resume, null, 2));
+    // console.debug(JSON.stringify(this.form.resume, null, 2));
+    // console.debug(JSON.stringify(JSON.stringify(Object.fromEntries(serialize(this.form.resume).entries())), null, 2));
   }
 }

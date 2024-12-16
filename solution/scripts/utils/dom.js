@@ -1,12 +1,12 @@
 // @ts-check
 
 /**
- * 
- * @param {() => HTMLElement} child 
- * @param {HTMLElement} root 
+ * @param {() => HTMLElement | Promise<HTMLElement>} child
+ * @param {HTMLElement} root
  */
 export function render(child, root) {
-  document.addEventListener("DOMContentLoaded", () => {
-    root.appendChild(child());
+  document.addEventListener("DOMContentLoaded", async () => {
+    const element = await Promise.resolve(child());
+    root.appendChild(element);
   });
 }
