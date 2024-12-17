@@ -44,7 +44,7 @@ export default class CoursesFieldset extends Fieldset {
     });
 
     const start = new Field({
-      name: this.generateUniqueId("date-start"),
+      name: this.generateUniqueId("date_start"),
       type: "date",
       value: value?.date_start,
       placeholder: "Введите дату начала обучения…",
@@ -52,7 +52,7 @@ export default class CoursesFieldset extends Fieldset {
     });
 
     const end = new Field({
-      name: this.generateUniqueId("date-end"),
+      name: this.generateUniqueId("date_end"),
       type: "date",
       value: value?.date_end,
       placeholder: "Введите дату окончания обучения…",

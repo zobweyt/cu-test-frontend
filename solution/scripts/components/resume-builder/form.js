@@ -25,6 +25,7 @@ export default class ResumeBuilderForm {
       name: "name",
       value: resume?.name,
       placeholder: "Введите название резюме…",
+      testId: "resume-title-field",
       autofocus: true,
     });
 
