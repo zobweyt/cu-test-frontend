@@ -34,16 +34,16 @@
 
 /**
  * @typedef {Object} Resume
- * @property {string} name
+ * @property {string} [name]
  * @property {string} username
- * @property {string} birthday
- * @property {string} city
- * @property {string} tel
- * @property {string} email
- * @property {string} description
- * @property {string[]} interests
- * @property {Language[]} languages
- * @property {Job[]} jobs
- * @property {Education[]} education
- * @property {Course[]} courses
+ * @property {string} [birthday]
+ * @property {string} [city]
+ * @property {string} [tel]
+ * @property {string} [email]
+ * @property {string} [description]
+ * @property {string[]} [interests]
+ * @property {Language[]} [languages]
+ * @property {Job[]} [jobs]
+ * @property {Education[]} [education]
+ * @property {Course[]} [courses]
  */
