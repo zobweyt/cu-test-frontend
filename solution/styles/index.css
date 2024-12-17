@@ -290,6 +290,14 @@
     margin-block-end: 0;
   }
 
+  hr {
+    height: 1px;
+    border: none;
+    box-shadow: none;
+    color: currentColor;
+    background: currentColor;
+  }
+
   img,
   picture {
     max-width: 100%;
