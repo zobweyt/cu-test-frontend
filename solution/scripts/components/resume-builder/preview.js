@@ -434,6 +434,6 @@ export default class ResumeBuilderPreview {
       addResume(this.resume);
     }
 
-    window.location.href = "/all";
+    window.location.href = "/all.html";
   }
 }

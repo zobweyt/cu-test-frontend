@@ -173,7 +173,7 @@ export default class ResumeBuilderForm {
     );
     this.all.element.addEventListener(
       "click",
-      () => (window.location.href = "/all"),
+      () => (window.location.href = "/all.html"),
     );
   }
 
@@ -218,7 +218,7 @@ export default class ResumeBuilderForm {
       addResume(this.readResume());
     }
 
-    window.location.href = "/all";
+    window.location.href = "/all.html";
   }
 
   readResume() {
