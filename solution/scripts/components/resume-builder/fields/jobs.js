@@ -70,7 +70,7 @@ export default class JobsFieldset extends Fieldset {
       name: this.generateUniqueId("description"),
       value: value?.description,
       placeholder: "Введите описание работы…",
-      testId: "jon-description",
+      testId: "job-description",
       multiline: true,
     });
 
