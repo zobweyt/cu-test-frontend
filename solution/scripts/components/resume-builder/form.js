@@ -3,6 +3,7 @@
 /// <reference path="./types.js" />
 
 import { dump } from "../../utils/form.js";
+import { requestSingleFile } from "../../utils/fs.js";
 import Button from "../button.js";
 import Field from "../field.js";
 import CoursesFieldset from "./fields/courses.js";
@@ -20,31 +21,6 @@ export default class ResumeBuilderForm {
     this.resume = resume;
 
     this.element = document.createElement("form");
-
-    this.name = new Field({
-      name: "name",
-      value: resume?.name,
-      placeholder: "Введите название резюме…",
-      testId: "resume-title-field",
-      autofocus: true,
-    });
-
-    this.personal = new PersonalFieldset(resume);
-
-    this.description = new Field({
-      name: "description",
-      value: resume?.description,
-      placeholder: "Введите описание о себе…",
-      testId: "personal-description",
-      multiline: true,
-    });
-
-    this.interests = new InterestsFieldset(resume?.interests);
-    this.languages = new LanguagesFieldset(resume?.languages);
-    this.jobs = new JobsFieldset(resume?.jobs);
-    this.education = new EducationFieldset(resume?.education);
-    this.courses = new CoursesFieldset(resume?.courses);
-
     this.footer = document.createElement("div");
 
     this.submit = new Button({
@@ -53,20 +29,56 @@ export default class ResumeBuilderForm {
       testId: "generate-resume",
     });
 
+    this.import = new Button({
+      type: "reset",
+      label: "Импортировать резюме",
+      testId: "import-resume",
+      variant: "secondary",
+    });
+
     this.setup();
   }
 
   setup() {
+    this.element.innerHTML = "";
+
+    this.createFields();
     this.setupElements();
     this.setupLayout();
     this.setupEventListeners();
 
-    this.name.input.focus();
-    this.name.input.select();
+    this.name?.input.focus();
+    this.name?.input.select();
 
     requestAnimationFrame(() => {
       this.updateSubmitButtonDisabled();
     });
+  }
+
+  createFields() {
+    this.name = new Field({
+      name: "name",
+      value: this.resume?.name,
+      placeholder: "Введите название резюме…",
+      testId: "resume-title-field",
+      autofocus: true,
+    });
+
+    this.personal = new PersonalFieldset(this.resume);
+
+    this.description = new Field({
+      name: "description",
+      value: this.resume?.description,
+      placeholder: "Введите описание о себе…",
+      testId: "personal-description",
+      multiline: true,
+    });
+
+    this.interests = new InterestsFieldset(this.resume?.interests);
+    this.languages = new LanguagesFieldset(this.resume?.languages);
+    this.jobs = new JobsFieldset(this.resume?.jobs);
+    this.education = new EducationFieldset(this.resume?.education);
+    this.courses = new CoursesFieldset(this.resume?.courses);
   }
 
   setupElements() {
@@ -88,19 +100,21 @@ export default class ResumeBuilderForm {
     this.setupFooterLayout();
     this.setupElementLayout();
   }
+
   setupFooterLayout() {
+    this.footer.appendChild(this.import.element);
     this.footer.appendChild(this.submit.element);
   }
 
   setupElementLayout() {
-    this.element.appendChild(this.name.element);
-    this.element.appendChild(this.personal.element);
-    this.element.appendChild(this.description.element);
-    this.element.appendChild(this.interests.element);
-    this.element.appendChild(this.languages.element);
-    this.element.appendChild(this.jobs.element);
-    this.element.appendChild(this.education.element);
-    this.element.appendChild(this.courses.element);
+    this.name && this.element.appendChild(this.name.element);
+    this.personal && this.element.appendChild(this.personal.element);
+    this.description && this.element.appendChild(this.description.element);
+    this.interests && this.element.appendChild(this.interests.element);
+    this.languages && this.element.appendChild(this.languages.element);
+    this.jobs && this.element.appendChild(this.jobs.element);
+    this.education && this.element.appendChild(this.education.element);
+    this.courses && this.element.appendChild(this.courses.element);
     this.element.appendChild(this.footer);
   }
 
@@ -121,12 +135,27 @@ export default class ResumeBuilderForm {
       "submit",
       this.handleResumeSubmitEvent.bind(this),
     );
+    this.import.element.addEventListener(
+      "click",
+      this.importResumeFromJSON.bind(this),
+    );
   }
 
   updateSubmitButtonDisabled() {
     requestAnimationFrame(() => {
       this.submit.element.disabled = !this.element.checkValidity();
     });
+  }
+
+  /**
+   * @param {MouseEvent} event
+   */
+  async importResumeFromJSON(event) {
+    const content = await requestSingleFile([".json"]);
+
+    this.resume = /** @type {Resume} */ JSON.parse(content);
+
+    this.setup();
   }
 
   /**
