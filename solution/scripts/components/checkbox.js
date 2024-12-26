@@ -1,26 +1,24 @@
 // @ts-check
 
 /**
- * @typedef {Object} FieldProps
+ * @typedef {Object} CheckboxProps
  * @property {string} [name]
- * @property {string} [type]
- * @property {string} [value]
  * @property {string} [label]
- * @property {string} [placeholder]
  * @property {string} [testId]
  * @property {boolean} [required]
  * @property {boolean} [autofocus]
- * @property {boolean} [multiline]
  */
 
-export default class Field {
+export default class Checkbox {
   /**
-   * @param {FieldProps} props
+   * @param {CheckboxProps} props
    */
   constructor(props) {
     this.options = props;
 
     this.element = document.createElement("div");
+
+    this.input = document.createElement("input");
 
     this.value = document.createElement("span");
     this.value.classList.add("sr-only");
@@ -29,17 +27,12 @@ export default class Field {
       this.label = document.createElement("label");
     }
 
-    this.input = document.createElement(
-      this.options.multiline ? "textarea" : "input",
-    );
-
     this.setup();
   }
 
   setup() {
     this.setupElements();
     this.setupLayout();
-    this.setupEventListeners();
   }
 
   setupElements() {
@@ -49,58 +42,32 @@ export default class Field {
   }
 
   setupElement() {
-    this.element.classList.add("field");
+    this.element.classList.add("flex-group");
   }
 
   setupLabel() {
     if (this.label && this.options.label) {
-      this.label.classList.add("field__label");
       this.label.textContent = this.options.label;
       this.label.setAttribute("for", this.options.name ?? "");
     }
   }
 
   setupInput() {
-    if (this.input instanceof HTMLInputElement) {
-      this.input.type = this.options.type ?? "text";
-    }
-
-    this.input.classList.add("field__input");
+    this.input.type = "checkbox";
     this.input.id = this.options.name ?? "";
     this.input.name = this.options.name ?? "";
-
-    if (this.options.value) {
-      this.input.value = this.options.value;
-      this.input.setAttribute("value", this.options.value);
-
-      // Workaround for playwright
-      this.value.textContent = this.options.value;
-    }
-
-    this.input.placeholder = this.options.placeholder ?? "";
     this.input.required = this.options.required ?? false;
     this.input.autofocus = this.options.autofocus ?? false;
     this.input.setAttribute("test-id", this.options.testId ?? "");
   }
 
   setupLayout() {
+    this.element.appendChild(this.input);
+
     if (this.label) {
       this.element.appendChild(this.label);
     }
 
-    this.element.appendChild(this.input);
     this.element.appendChild(this.value);
-  }
-
-  setupEventListeners() {
-    this.input.form?.addEventListener("reset", this.reset.bind(this));
-  }
-
-  reset() {
-    const value = this.options.value;
-
-    if (value) {
-      this.input.value = value;
-    }
   }
 }

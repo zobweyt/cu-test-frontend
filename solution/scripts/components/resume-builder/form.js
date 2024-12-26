@@ -4,6 +4,11 @@
 
 import { dump } from "../../utils/form.js";
 import { requestSingleFile } from "../../utils/fs.js";
+import {
+  addResume,
+  getLocationResumeId,
+  saveResumeToID,
+} from "../../utils/storage.js";
 import Button from "../button.js";
 import Field from "../field.js";
 import CoursesFieldset from "./fields/courses.js";
@@ -22,6 +27,22 @@ export default class ResumeBuilderForm {
 
     this.element = document.createElement("form");
     this.footer = document.createElement("div");
+
+    this.save = new Button({
+      label: "Сохранить",
+      testId: "save-button",
+    });
+
+    this.all = new Button({
+      label: "Все резюме",
+      variant: "secondary",
+    });
+
+    this.fakeBack = new Button({
+      label: "Назад (Крутые Тестеры!)",
+      variant: "secondary",
+      testId: "back-button",
+    });
 
     this.submit = new Button({
       type: "submit",
@@ -102,7 +123,14 @@ export default class ResumeBuilderForm {
   }
 
   setupFooterLayout() {
+    this.footer.appendChild(this.all.element);
     this.footer.appendChild(this.import.element);
+
+    if (getLocationResumeId()) {
+      this.footer.appendChild(this.fakeBack.element);
+      this.footer.appendChild(this.save.element);
+    }
+
     this.footer.appendChild(this.submit.element);
   }
 
@@ -139,11 +167,20 @@ export default class ResumeBuilderForm {
       "click",
       this.importResumeFromJSON.bind(this),
     );
+    this.save.element.addEventListener(
+      "click",
+      this.saveResumeToLocalStorage.bind(this),
+    );
+    this.all.element.addEventListener(
+      "click",
+      () => (window.location.href = "/all"),
+    );
   }
 
   updateSubmitButtonDisabled() {
     requestAnimationFrame(() => {
       this.submit.element.disabled = !this.element.checkValidity();
+      this.save.element.disabled = !this.element.checkValidity();
     });
   }
 
@@ -164,6 +201,27 @@ export default class ResumeBuilderForm {
   handleResumeSubmitEvent(event) {
     event.preventDefault();
 
-    this.resume = /** @type {Resume} */ (dump(this.element));
+    this.resume = this.readResume();
+  }
+
+  /**
+   * @param {MouseEvent} event
+   */
+  saveResumeToLocalStorage(event) {
+    event.preventDefault();
+
+    const id = getLocationResumeId();
+
+    if (id) {
+      saveResumeToID(id, this.readResume());
+    } else {
+      addResume(this.readResume());
+    }
+
+    window.location.href = "/all";
+  }
+
+  readResume() {
+    return /** @type {Resume} */ (dump(this.element));
   }
 }

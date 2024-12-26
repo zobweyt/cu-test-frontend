@@ -1,0 +1,20 @@
+.resume-list {
+  list-style-type: none;
+  display: flex;
+  flex-direction: column;
+  gap: 1rem;
+}
+
+.resume-list__item {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  border: 1px solid rgb(var(--secondary));
+  padding: 0.5rem 0.75rem;
+  border-radius: 0.75rem;
+}
+.resume-list__item__title {
+  font-weight: 700;
+  margin: 0;
+  font-size: var(--font-size-large);
+}

@@ -2,61 +2,65 @@
 
 /// <reference path="./types.js" />
 
+import { getLocationResume } from "../../utils/storage.js";
 import ResumeBuilderForm from "./form.js";
+import ResumeBuilderPreview from "./preview.js";
 
 export default class ResumeBuilderPage {
+  constructor() {
+    this.resume = getLocationResume();
+
+    this.element = this.createElement();
+    this.heading = this.createHeading();
+    this.form = this.createForm(this.resume);
+
+    this.setupLayout();
+  }
+
+  createElement() {
+    const element = document.createElement("div");
+    element.classList.add("primary-layout");
+    return element;
+  }
+
+  createHeading() {
+    const heading = document.createElement("h1");
+    heading.textContent = this.resume?.username || "Конструктор резюме";
+    return heading;
+  }
+
   /**
    * @param {Resume} [resume]
    */
-  constructor(resume) {
-    this.resume = resume;
-
-    this.element = document.createElement("div");
-    this.heading = document.createElement("h1");
-    this.form = new ResumeBuilderForm(resume);
-
-    this.setup();
+  createForm(resume) {
+    const form = new ResumeBuilderForm(resume);
+    form.element.addEventListener("submit", this.showPreview.bind(this));
+    return form;
   }
 
-  setup() {
-    this.setupElements();
-    this.setupLayout();
-    this.setupEventListeners();
-  }
+  createPreview() {
+    if (this.form.resume === undefined) {
+      return;
+    }
 
-  setupElements() {
-    this.setupHeading();
-    this.setupElement();
-  }
-
-  setupHeading() {
-    this.heading.textContent = "Конструктор резюме";
-  }
-
-  setupElement() {
-    this.element.classList.add("primary-layout");
+    const preview = new ResumeBuilderPreview(this.form.resume);
+    preview.hide.element.addEventListener("click", this.hidePreview.bind(this));
+    return preview;
   }
 
   setupLayout() {
-    this.element.appendChild(this.heading);
-    this.element.appendChild(this.form.element);
+    this.element.append(this.heading, this.form.element);
   }
 
-  setupEventListeners() {
-    this.form.element.addEventListener(
-      "submit",
-      this.generateResume.bind(this),
-    );
+  showPreview() {
+    this.preview = this.createPreview();
+
+    if (this.preview) {
+      this.form.element.replaceWith(this.preview.element);
+    }
   }
 
-  /**
-   * @param {SubmitEvent} event
-   */
-  generateResume(event) {
-    event.preventDefault();
-
-    alert(JSON.stringify(this.form.resume, null, 2));
-    // console.debug(JSON.stringify(this.form.resume, null, 2));
-    // console.debug(JSON.stringify(JSON.stringify(Object.fromEntries(serialize(this.form.resume).entries())), null, 2));
+  hidePreview() {
+    this.preview?.element.replaceWith(this.form.element);
   }
 }
